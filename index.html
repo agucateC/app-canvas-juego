@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRUEBA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Rubik+Glitch&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="CSS/styles.css" </head>
+
+<body>
+    <h1 class="titulo">¡BOOM!</h1>
+    <div id="welcomeScreen">
+        <h1>Bienvenido al Juego</h1>
+        <p>Evita que explote tu BOMBA</p>
+        <button id="startGame">Comenzar</button>
+    </div>
+    <!-- Modal para ingresar el nombre -->
+<div id="nameModal" class="modal">
+    <div class="modal-content">
+        <h2>Ingrese su nombre</h2>
+        <input type="text" id="playerNameInput" placeholder="Tu nombre">
+        <button id="saveNameButton">Aceptar</button>
+    </div>
+</div>
+    <div id="scoreDisplay">
+    </div>
+
+    <div class="contenedor">
+        <div class="card">
+            <div class="card-body">
+                <canvas id="canvas"></canvas>
+                <button id="startButton">Iniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>
