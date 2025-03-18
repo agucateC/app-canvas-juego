@@ -6,7 +6,7 @@ const nameModal = document.getElementById("nameModal");
 const playerNameInput = document.getElementById("playerNameInput");
 const saveNameButton = document.getElementById("saveNameButton");
 const collisionSound = new Audio("sonido/explosion.mp3");
-const backgroundMusic = new Audio("ruta-del-sonido/backgroundMusic.mp3");
+const backgroundMusic = new Audio("sonido/fondo.mp3");
 
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.5; // Ajusta el volumen si es necesario
@@ -42,7 +42,7 @@ const window_width = 700;
 
 canvas.height = window_height;
 canvas.width = window_width;
-canvas.style.background = "#1e1f24c8";
+canvas.style.background = "#3e4349c8";
 
 const scoreDisplay = document.getElementById("scoreDisplay");
 const numImages = 10;
@@ -209,7 +209,7 @@ function checkCollision() {
 
 function drawGameOverMessage() {
     ctx.fillStyle = "red";
-    ctx.font = "30px Arial";
+    ctx.font = "30px Honk";
     ctx.fillText("GAME OVER", window_width / 2 - 70, window_height / 2);
 }
 
