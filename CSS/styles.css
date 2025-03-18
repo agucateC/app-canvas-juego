@@ -1,9 +1,14 @@
 body {
-    font-family: "DynaPuff", system-ui;
+    font-family: "Honk", system-ui;
     text-align: center;
     font-size: 2rem;
+    background: url("https://www.creativefabrica.com/wp-content/uploads/2022/05/17/Futuristic-Red-Background-Design-Graphics-30690525-1.jpg");
+    background-size: cover; /* Ajusta la imagen para cubrir toda la pantalla */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat;
 }
 #welcomeScreen {
+    font-family: "Honk", system-ui;
     position: fixed;
     top: 0;
     left: 0;
@@ -18,7 +23,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 10px;
+    font-size: 3rem;
     z-index: 1000;
 }
 

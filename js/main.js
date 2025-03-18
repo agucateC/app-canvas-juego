@@ -5,7 +5,7 @@ const restartButton = document.getElementById("restartButton");
 const nameModal = document.getElementById("nameModal");
 const playerNameInput = document.getElementById("playerNameInput");
 const saveNameButton = document.getElementById("saveNameButton");
-const collisionSound = new Audio("ruta-del-sonido/collisionSound.mp3");
+const collisionSound = new Audio("sonido/explosion.mp3");
 const backgroundMusic = new Audio("ruta-del-sonido/backgroundMusic.mp3");
 
 backgroundMusic.loop = true;
@@ -42,7 +42,7 @@ const window_width = 700;
 
 canvas.height = window_height;
 canvas.width = window_width;
-canvas.style.background = "#ff8";
+canvas.style.background = "#1e1f24c8";
 
 const scoreDisplay = document.getElementById("scoreDisplay");
 const numImages = 10;
@@ -191,19 +191,21 @@ function checkCollision() {
         let dx = cursor.x - (image.posX + imageSize / 2);
         let dy = cursor.y - (image.posY + imageSize / 2);
         let distance = Math.sqrt(dx * dx + dy * dy);
+        
         if (distance < imageSize / 2 + 5) {
-            createExplosion(image.posX + imageSize / 2, image.posY + imageSize / 2);
+            cursor.visible = false; // 🚀 Ocultar el cursor
+            createExplosion(cursor.x, cursor.y); // 💥 Explosión en la posición del cursor
             collisionSound.play();
-            // Retrasa el Game Over para que la explosión sea visible
+
             setTimeout(() => {
                 gameOver = true;
                 saveScore();
                 restartButton.style.display = "block";
-            }, 500); // Espera 0.5 segundos antes de mostrar "Game Over"
-
+            }, 500); 
         }
     });
 }
+
 
 function drawGameOverMessage() {
     ctx.fillStyle = "red";
@@ -262,16 +264,17 @@ function resetGame() {
     score = 0;
     level = 1;
     fixedSpeed = 2;
-    cursor.visible = true;
+    cursor.visible = true; // ✅ Hacer que el cursor reaparezca
     cursor.x = window_width / 2;
     cursor.y = window_height / 2;
     gameOver = false;
-    restartButton.style.display = "none"; // Ocultar el botón de reinicio
+    restartButton.style.display = "none";
 
-    initImages(); // Reiniciar las imágenes con nuevas posiciones
+    initImages();
     updateScoreDisplay();
     updateGame();
 }
+
 
 function updateGame() {
     ctx.clearRect(0, 0, window_width, window_height);
