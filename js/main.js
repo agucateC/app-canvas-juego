@@ -1,21 +1,44 @@
 const canvas = document.getElementById("canvas");
 const startButton = document.getElementById("startButton");
 const startGameButton = document.getElementById("startGame");
-const restartButton = document.createElement("button");
+const restartButton = document.getElementById("restartButton");
+const nameModal = document.getElementById("nameModal");
+const playerNameInput = document.getElementById("playerNameInput");
+const saveNameButton = document.getElementById("saveNameButton");
+const collisionSound = new Audio("ruta-del-sonido/collisionSound.mp3");
+const backgroundMusic = new Audio("ruta-del-sonido/backgroundMusic.mp3");
 
+backgroundMusic.loop = true;
+backgroundMusic.volume = 0.5; // Ajusta el volumen si es necesario
 // Configuración del botón de reinicio
-restartButton.textContent = "Reiniciar";
+/*restartButton.textContent = "Reiniciar";
 restartButton.style.display = "none";
 restartButton.style.position = "absolute";
 restartButton.style.top = "350px";
 restartButton.style.left = "50%";
 restartButton.style.transform = "translateX(-50%)";
-document.body.appendChild(restartButton);
+document.body.appendChild(restartButton);*/
+// Crear el botón "Quit"
+const quitButton = document.createElement("button");
+quitButton.textContent = "Quit";
+quitButton.classList.add("quit-button");
+document.body.appendChild(quitButton);
+quitButton.style.display = "none"; // Oculto al inicio
+
+const instructions = document.getElementById("instructions");
+
+// Ocultar las instrucciones al hacer clic
+instructions.addEventListener("click", () => {
+    instructions.style.display = "none";
+});
+
+const welcomeScreen = document.getElementById("welcomeScreen");
+
 
 let ctx = canvas.getContext("2d");
 
-const window_height = 300;
-const window_width = 500;
+const window_height = 400;
+const window_width = 700;
 
 canvas.height = window_height;
 canvas.width = window_width;
@@ -125,16 +148,59 @@ function drawCursor() {
     if (!cursor.visible) return;
     ctx.drawImage(loadedImages[1], cursor.x - imageSize / 2, cursor.y - imageSize / 2, imageSize, imageSize);
 }
+let particles = [];
+
+class Particle {
+    constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.radius = Math.random() * 4 + 2;
+        this.color = color;
+        this.velocity = {
+            x: (Math.random() - 0.5) * 5,
+            y: (Math.random() - 0.5) * 5
+        };
+        this.alpha -= 0.005;
+    }
+
+    draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.restore();
+    }
+
+    update() {
+        this.x += this.velocity.x;
+        this.y += this.velocity.y;
+        this.alpha -= 0.02;
+    }
+}
+
+function createExplosion(x, y) {
+    for (let i = 0; i < 20; i++) {
+        particles.push(new Particle(x, y, `hsl(${Math.random() * 50}, 100%, 50%)`));
+    }
+}
 
 function checkCollision() {
     images.forEach(image => {
         let dx = cursor.x - (image.posX + imageSize / 2);
         let dy = cursor.y - (image.posY + imageSize / 2);
         let distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < imageSize / 2) {
-            gameOver = true;
-            saveScore();
-            restartButton.style.display = "block";
+        if (distance < imageSize / 2 + 5) {
+            createExplosion(image.posX + imageSize / 2, image.posY + imageSize / 2);
+            collisionSound.play();
+            // Retrasa el Game Over para que la explosión sea visible
+            setTimeout(() => {
+                gameOver = true;
+                saveScore();
+                restartButton.style.display = "block";
+            }, 500); // Espera 0.5 segundos antes de mostrar "Game Over"
+
         }
     });
 }
@@ -150,9 +216,47 @@ function updateScoreDisplay() {
 }
 
 function saveScore() {
-    scoreHistory.push({ name: playerName, score: score });
-    console.log("Historial de puntajes:", scoreHistory);
+    let scoreHistory = JSON.parse(localStorage.getItem("scoreHistory")) || [];
+
+    // Buscar si el jugador ya tiene un puntaje registrado
+    let existingPlayer = scoreHistory.find(entry => entry.name === playerName);
+
+    if (existingPlayer) {
+        // Si el nuevo puntaje es mayor, actualizarlo
+        if (score > existingPlayer.score) {
+            existingPlayer.score = score;
+        }
+    } else {
+        // Si es la primera vez que juega, añadirlo
+        scoreHistory.push({ name: playerName, score: score });
+    }
+
+    // Guardar en localStorage
+    localStorage.setItem("scoreHistory", JSON.stringify(scoreHistory));
+
+    // Actualizar el highScore mostrado
+    highScore = Math.max(highScore, score);
 }
+
+function loadHighScore() {
+    let scoreHistory = JSON.parse(localStorage.getItem("scoreHistory")) || [];
+    let playerRecord = scoreHistory.find(entry => entry.name === playerName);
+    highScore = playerRecord ? playerRecord.score : 0;
+}
+
+function updateScoreDisplay() {
+    scoreDisplay.textContent = `Jugador: ${playerName} | Score: ${score} | High Score: ${highScore} | Level: ${level}`;
+}
+
+// Cargar el high score del jugador al iniciar sesión
+saveNameButton.addEventListener("click", function () {
+    playerName = playerNameInput.value.trim() || "Jugador anónimo";
+    loadHighScore(); // Cargar el puntaje más alto registrado del jugador
+    updateScoreDisplay();
+    nameModal.style.display = "none"; // Ocultar el modal
+});
+
+
 
 function resetGame() {
     score = 0;
@@ -170,18 +274,29 @@ function resetGame() {
 }
 
 function updateGame() {
+    ctx.clearRect(0, 0, window_width, window_height);
+
     if (gameOver) {
-        ctx.clearRect(0, 0, window_width, window_height);
         drawGameOverMessage();
         return;
     }
 
-    requestAnimationFrame(updateGame);
-    ctx.clearRect(0, 0, window_width, window_height);
+    // Dibujar partículas de explosión
+    for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].draw();
+        if (particles[i].alpha <= 0) {
+            particles.splice(i, 1);
+        }
+    }
+
     images.forEach(image => image.update(ctx));
     checkCollision();
     drawCursor();
+
+    requestAnimationFrame(updateGame); // Asegurar que la animación no se detenga
 }
+
 
 canvas.addEventListener("mousemove", (event) => {
     if (cursor.follow) {
@@ -195,11 +310,11 @@ canvas.addEventListener("mousedown", (event) => {
     const rect = canvas.getBoundingClientRect();
     const clickX = event.clientX - rect.left;
     const clickY = event.clientY - rect.top;
-    
+
     let dx = clickX - cursor.x;
     let dy = clickY - cursor.y;
     let distance = Math.sqrt(dx * dx + dy * dy);
-    
+
     if (distance < imageSize / 2) {
         cursor.follow = true;
     }
@@ -209,9 +324,7 @@ canvas.addEventListener("mouseup", () => {
     cursor.follow = false;
 });
 
-const nameModal = document.getElementById("nameModal");
-const playerNameInput = document.getElementById("playerNameInput");
-const saveNameButton = document.getElementById("saveNameButton");
+
 
 // Mostrar el modal al hacer clic en "Comenzar"
 startGameButton.addEventListener("click", function () {
@@ -219,28 +332,67 @@ startGameButton.addEventListener("click", function () {
     nameModal.style.display = "flex"; // Mostrar el modal
 });
 
+
 // Guardar el nombre y cerrar el modal al hacer clic en "Aceptar"
 saveNameButton.addEventListener("click", function () {
     playerName = playerNameInput.value.trim();
     if (!playerName) playerName = "Jugador anónimo"; // Si está vacío, usar un nombre genérico
+    quitButton.style.display = "block"; // ✅ Mostrar el botón "Quit"
+
 
     updateScoreDisplay();
     nameModal.style.display = "none"; // Ocultar el modal
 });
 
+function startBackgroundMusic() {
+    backgroundMusic.play();
+}
+startBackgroundMusic(); 
 // El botón "Iniciar" ahora solo inicia el juego
 startButton.addEventListener("click", async () => {
+    gameOver = false; // Asegurar que el juego inicie correctamente
     cursor.visible = true;
     cursor.follow = false;
     cursor.x = window_width / 2;
     cursor.y = window_height / 2;
-    
+
     loadedImages[0] = await loadImage(imageSrc);
     loadedImages[1] = await loadImage(cursorSrc);
-    
+
+    images.length = 0; // Asegurar que no haya imágenes viejas
     initImages(); // Inicializar las imágenes correctamente al inicio
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpiar canvas antes de iniciar
     updateGame();
     updateScoreDisplay();
 });
 
+
 restartButton.addEventListener("click", resetGame);
+quitButton.addEventListener("click", function () {
+    gameOver = true; // Detener el juego
+    welcomeScreen.style.display = "flex"; // Mostrar pantalla de inicio
+    quitButton.style.display = "none"; // Ocultar el botón "Quit"
+
+    // Resetear variables del juego
+    score = 0;
+    level = 1;
+    fixedSpeed = 2;
+    cursor.visible = true;
+    cursor.x = window_width / 2;
+    cursor.y = window_height / 2;
+    gameOver = false; // Evitar que el juego siga en estado de "Game Over"
+
+    // Limpiar el array de imágenes
+    images.length = 0;
+
+    // Limpiar el nombre del jugador y la entrada del modal
+    playerName = "";
+    playerNameInput.value = "";
+
+    // Limpiar el canvas para evitar que queden elementos visibles
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    restartButton.style.display = "none"; // Ocultar botón de reinicio si estaba visible
+    updateScoreDisplay();
+});
