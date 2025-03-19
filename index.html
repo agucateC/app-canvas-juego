@@ -9,8 +9,10 @@
     <!-- Fuentes externas de Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Honk&family=Rubik+Glitch&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Honk&family=Rubik+Glitch&display=swap"
+        rel="stylesheet">
+
     <!-- Enlace a la hoja de estilos externa -->
     <link rel="stylesheet" href="CSS/styles.css">
 </head>
@@ -18,14 +20,14 @@
 <body>
     <!-- Título principal del juego -->
     <h1 class="titulo">💣¡BOOM!💣</h1>
-    
+
     <!-- Pantalla de bienvenida con botón para iniciar el juego -->
     <div id="welcomeScreen">
         <h1>Bienvenido al Juego</h1>
         <p>NO ME DEJES EXPLOTAR🤯💣</p>
         <button id="startGame">PLAY</button>
     </div>
-    
+
     <!-- Modal para ingresar el nombre del jugador -->
     <div id="nameModal" class="modal">
         <div class="modal-content">
@@ -34,7 +36,7 @@
             <button id="saveNameButton">Aceptar</button>
         </div>
     </div>
-    
+
     <!-- Sección de instrucciones del juego -->
     <div id="instructions" class="instructions">
         <p>🎮 Instrucciones:</p>
@@ -46,13 +48,13 @@
         </ul>
         <p>Haz clic para cerrar.</p>
     </div>
-    
+
     <!-- Botón para salir del juego -->
     <button id="quitButton" class="quit-button">Quit</button>
-    
+
     <!-- Contenedor donde se muestra el puntaje -->
     <div id="scoreDisplay"></div>
-    
+
     <!-- Contenedor principal del juego -->
     <div class="contenedor">
         <div class="card">
@@ -65,7 +67,15 @@
             </div>
         </div>
     </div>
-    
+    <!-- Pie de página -->
+    <footer class="text-white py-3">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2025 - Todos los derechos reservados | Carlos Cruz</p>
+        </div>
+    </footer>
+    </div>
+
+
     <!-- Archivo JavaScript principal del juego -->
     <script src="js/main.js"></script>
 </body>
