@@ -201,6 +201,9 @@ function checkCollision() {
                 gameOver = true;
                 saveScore();
                 restartButton.style.display = "block";
+                startButton.style.display = "none";
+
+                
             }, 500); 
         }
     });
