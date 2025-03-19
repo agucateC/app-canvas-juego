@@ -4,27 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRUEBA</title>
+    <title>Juego</title>
+
+    <!-- Fuentes externas de Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Rubik+Glitch&display=swap"
-        rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Honk&family=Rubik+Glitch&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="CSS/styles.css" </head>
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Honk&family=Rubik+Glitch&display=swap" rel="stylesheet">
+    
+    <!-- Enlace a la hoja de estilos externa -->
+    <link rel="stylesheet" href="CSS/styles.css">
+</head>
 
 <body>
+    <!-- Título principal del juego -->
     <h1 class="titulo">💣¡BOOM!💣</h1>
+    
+    <!-- Pantalla de bienvenida con botón para iniciar el juego -->
     <div id="welcomeScreen">
         <h1>Bienvenido al Juego</h1>
         <p>NO ME DEJES EXPLOTAR🤯💣</p>
-
         <button id="startGame">PLAY</button>
     </div>
-    <!-- Modal para ingresar el nombre -->
+    
+    <!-- Modal para ingresar el nombre del jugador -->
     <div id="nameModal" class="modal">
         <div class="modal-content">
             <h2>Ingrese su nombre</h2>
@@ -32,6 +34,8 @@
             <button id="saveNameButton">Aceptar</button>
         </div>
     </div>
+    
+    <!-- Sección de instrucciones del juego -->
     <div id="instructions" class="instructions">
         <p>🎮 Instrucciones:</p>
         <ul>
@@ -42,23 +46,27 @@
         </ul>
         <p>Haz clic para cerrar.</p>
     </div>
-
+    
+    <!-- Botón para salir del juego -->
     <button id="quitButton" class="quit-button">Quit</button>
-
-    <div id="scoreDisplay">
-    </div>
-
+    
+    <!-- Contenedor donde se muestra el puntaje -->
+    <div id="scoreDisplay"></div>
+    
+    <!-- Contenedor principal del juego -->
     <div class="contenedor">
         <div class="card">
             <div class="card-body">
+                <!-- Canvas donde se renderiza el juego -->
                 <canvas id="canvas"></canvas>
+                <!-- Botones de control del juego -->
                 <button id="startButton">Iniciar</button>
                 <button id="restartButton">Reiniciar</button>
             </div>
         </div>
     </div>
-
-
+    
+    <!-- Archivo JavaScript principal del juego -->
     <script src="js/main.js"></script>
 </body>
 

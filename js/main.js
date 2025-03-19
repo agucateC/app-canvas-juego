@@ -368,6 +368,7 @@ startButton.addEventListener("click", async () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpiar canvas antes de iniciar
     updateGame();
     updateScoreDisplay();
+    backgroundMusic.play().catch(error => console.error("Error al reproducir la música:", error));
 });
 
 
